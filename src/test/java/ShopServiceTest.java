@@ -37,4 +37,21 @@ class ShopServiceTest {
             // all good: expected exception was thrown
         }
     }
+
+    @Test
+    void updateOrder() throws ProductNotAvailableException {
+        //GIVEN
+        ShopService shopService = new ShopService();
+        List<String> productsIds = List.of("1");
+        Order order = shopService.addOrder(productsIds);
+
+        // WHEN
+        shopService.updateOrder(order.id(), OrderStatus.COMPLETED);
+
+        // THEN
+        List<Order> processingOrders = shopService.findAllOrders(OrderStatus.PROCESSING);
+        assertEquals(0, processingOrders.size());
+        List<Order> completedOrders = shopService.findAllOrders(OrderStatus.COMPLETED);
+        assertEquals(1, completedOrders.size());
+    }
 }
