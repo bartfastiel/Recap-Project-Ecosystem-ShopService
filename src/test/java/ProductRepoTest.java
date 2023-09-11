@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,20 +19,33 @@ class ProductRepoTest {
     }
 
     @org.junit.jupiter.api.Test
-    void getProductById() {
+    void getProductById_withProduct() {
         //GIVEN
         ProductRepo repo = new ProductRepo();
 
         //WHEN
-        Product actual = repo.getProductById("1");
+        Optional<Product> actual = repo.getProductById("1");
 
         //THEN
-        Product expected = new Product("1", "Apfel");
+        Optional<Product> expected = Optional.of(new Product("1", "Apfel"));
         assertEquals(actual, expected);
     }
 
     @org.junit.jupiter.api.Test
-    void addProduct() {
+    void getProductById_withoutProduct() {
+        //GIVEN
+        ProductRepo repo = new ProductRepo();
+
+        //WHEN
+        Optional<Product> actual = repo.getProductById("2");
+
+        //THEN
+        Optional<Product> expected = Optional.empty();
+        assertEquals(actual, expected);
+    }
+
+    @org.junit.jupiter.api.Test
+    void addProduct_yieldsAddedProduct() {
         //GIVEN
         ProductRepo repo = new ProductRepo();
         Product newProduct = new Product("2", "Banane");
@@ -46,7 +56,21 @@ class ProductRepoTest {
         //THEN
         Product expected = new Product("2", "Banane");
         assertEquals(actual, expected);
-        assertEquals(repo.getProductById("2"), expected);
+    }
+
+    @org.junit.jupiter.api.Test
+    void addProduct_makesProductFindable() {
+        //GIVEN
+        ProductRepo repo = new ProductRepo();
+        Product newProduct = new Product("2", "Banane");
+
+        //WHEN
+        repo.addProduct(newProduct);
+
+        //THEN
+        Optional<Product> actual = repo.getProductById("2");
+        Optional<Product> expected = Optional.of(newProduct);
+        assertEquals(actual, expected);
     }
 
     @org.junit.jupiter.api.Test
@@ -58,6 +82,6 @@ class ProductRepoTest {
         repo.removeProduct("1");
 
         //THEN
-        assertNull(repo.getProductById("1"));
+        assertEquals(Optional.empty(), repo.getProductById("1"));
     }
 }
