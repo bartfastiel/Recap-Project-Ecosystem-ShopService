@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ShopServiceTest {
 
     @Test
-    void addOrderTest() {
+    void addOrderTest() throws ProductNotAvailableException {
         //GIVEN
         ShopService shopService = new ShopService();
         List<String> productsIds = List.of("1");
@@ -22,15 +22,19 @@ class ShopServiceTest {
     }
 
     @Test
-    void addOrderTest_whenInvalidProductId_expectNull() {
+    void addOrderTest_whenInvalidProductId_expectException() {
         //GIVEN
         ShopService shopService = new ShopService();
         List<String> productsIds = List.of("1", "2");
 
         //WHEN
-        Order actual = shopService.addOrder(productsIds);
+        try {
+            shopService.addOrder(productsIds);
 
-        //THEN
-        assertNull(actual);
+            // expected Exception not thrown
+            fail("Expected ProductNotAvailableException not thrown, even though product 2 was ordered, that does not exist.");
+        } catch (ProductNotAvailableException e) {
+            // all good: expected exception was thrown
+        }
     }
 }
