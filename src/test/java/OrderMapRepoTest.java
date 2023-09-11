@@ -74,4 +74,22 @@ class OrderMapRepoTest {
         //THEN
         assertNull(repo.getOrderById("1"));
     }
+
+    @Test
+    void findAllOrders() {
+        // GIVEN
+        OrderMapRepo repo = new OrderMapRepo();
+        repo.addOrder(new Order("1", List.of(), OrderStatus.PROCESSING));
+        Order orderA = new Order("2", List.of(), OrderStatus.IN_DELIVERY);
+        repo.addOrder(orderA);
+        Order orderB = new Order("3", List.of(), OrderStatus.IN_DELIVERY);
+        repo.addOrder(orderB);
+        repo.addOrder(new Order("4", List.of(), OrderStatus.COMPLETED));
+
+        // WHEN
+        List<Order> actual = repo.findAllOrders(OrderStatus.IN_DELIVERY);
+
+        // THEN
+        assertEquals(List.of(orderA, orderB), actual);
+    }
 }

@@ -21,4 +21,8 @@ public class ShopService {
 
         return orderRepo.addOrder(newOrder);
     }
+
+    public List<Order> findAllOrders(OrderStatus status) {
+        return orderRepo.findAllOrders(status);
+    }
 }
